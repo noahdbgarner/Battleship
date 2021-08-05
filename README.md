@@ -1,10 +1,15 @@
 # Battleship (OOP Python Version)
 
-## 1. Description
+## 1. Introduction
 
-### Introduction
+### Description
 This program plays the classic game Battleship. It was built to be scalable with respect to grid dimensions and ships.
 Feel free to add/remove ships or change cols and rows in data.json
+
+### Technologies
+
+* Python version > 3.6 
+   - This is required because I make use of annotating variables and functions with type hints
 
 ## 2. Design
 
@@ -18,7 +23,7 @@ Feel free to add/remove ships or change cols and rows in data.json
 4. **player.py**
    - contains the Player class
 5. **ship.py**
-    - contains the ship class
+    - contains the Ship class
 
 ### 2.2 Object Relations
 - The driver creates two players
