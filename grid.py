@@ -3,7 +3,7 @@ import random
 
 class Grid:
     """
-    Representation of the Grid class.
+    Representation of the Grid class. A Grid has a list of ships, a list of ship locations, and a dictionary of shots
     """
     def __init__(self,
                  rows="",
@@ -18,7 +18,6 @@ class Grid:
     def build_ships(self, ship_data) -> None:
         for ship in ship_data:
             self.grid_ships.append(Ship(name=ship["name"], health=ship["health"]))
-        return
 
     def randomly_set_ship_locations(self) -> None:
         for ship in self.grid_ships:
@@ -28,7 +27,6 @@ class Grid:
             ship.set_coords(ship_coords)
             for coord in ship_coords:
                 self.ship_locations.append(coord)
-        return
 
     def build_ship_coordinates(self, ship) -> list:
         while True:
@@ -37,7 +35,7 @@ class Grid:
             vertical = random.choice([True, False])
 
             # Build ship_coords using the health of the ship
-            ship_coords = []
+            ship_coords: list = []
             for i in range(ship.health):
                 ship_coords.append((col, row))
                 if vertical:

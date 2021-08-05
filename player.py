@@ -4,7 +4,7 @@ import json
 
 class Player:
     """
-    Representation of the Player class. A Player has a Grid
+    Representation of the Player class. A Player has a Grid and may be a computer
     """
     def __init__(self,
                  name="",
@@ -39,7 +39,6 @@ class Player:
 
         # Add the location data to the shots dictionary
         enemy_grid.shots_dict[str(col) + str(row)] = location_data
-        return
 
     def check_and_validate_attack_coord(self, enemy_grid) -> tuple:
         while True:
@@ -103,7 +102,6 @@ class Player:
         print(*[chr(c+97).upper() for c in range(self.grid.cols)], end="")
 
         for r in range(self.grid.rows):
-
             # Print row headers, and offset considering num rows could change
             offset = ' ' * ((len(str(self.grid.rows))) - len(str(r+1)))
             print(f"\n{r+1} " + offset, end="")
@@ -112,7 +110,7 @@ class Player:
                 coord = str(c)+str(r)
                 location_info = self.grid.shots_dict.get(coord, "~")
 
-                # If printing player grid, we should print first letter of ship where ship not hit yet
+                # If printing player grid, we should print first letter of ship if (c, r) not hit yet
                 if coord not in self.grid.shots_dict and (c, r) in self.grid.ship_locations and not self.is_computer:
                     for ship in self.grid.grid_ships:
                         if (c, r) in ship.get_coords():
