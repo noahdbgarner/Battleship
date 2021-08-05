@@ -3,17 +3,14 @@ import json
 def play_battleship(player_1, player_2, game_data) -> None:
     """
     Description:
-        Builds each player's grid and ships. Both players attack each other until a player has no ships left
+        Builds each player's grid and ships. Both players print their grids and attack each other until a player has no ships left
     """
     player_1.build_grid_and_place_ships(game_data)
     player_2.build_grid_and_place_ships(game_data)
 
     while True:
-        print(f"{player_2.get_name()}")
         player_2.print_grid()
-        print(f"{player_1.get_name()}")
         player_1.print_grid()
-
         player_1.attack(player_2.grid)
         player_2.attack(player_1.grid)
 
@@ -68,7 +65,7 @@ def validate_data_file(data_file) -> str:
 
         # Check rows and cols < max ship["health"]
         if rows < max_ship_health and cols < max_ship_health:
-            print(f"Grid dimension not large enough for {max_ship_name}. Please check 'data.json'. Exiting.")
+            print(f"Grid dimensions not large enough for {max_ship_name}. Please check 'data.json'. Exiting.")
             exit(1)
 
     return data_file
