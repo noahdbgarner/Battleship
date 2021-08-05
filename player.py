@@ -15,9 +15,6 @@ class Player:
         self.grid: Grid = grid
         self.is_computer: bool = is_computer
 
-    def get_name(self) -> str:
-        return self.name
-
     def build_grid_and_place_ships(self, datafile) -> None:
         dimensions = self.read_dimensions(datafile)
         self.grid = Grid(rows=dimensions["rows"], cols=dimensions["cols"])
@@ -99,6 +96,7 @@ class Player:
 
     def print_grid(self) -> None:
         # Print offset, and col headers, considering num cols could change
+        print(self.name)
         print(' ' * (len(str(self.grid.rows)) + 1), end="")
         print(*[chr(c+97).upper() for c in range(self.grid.cols)], end="")
 
