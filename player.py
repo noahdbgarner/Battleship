@@ -42,7 +42,7 @@ class Player:
             # Handles bad input of the form '7b', '//', '%m', 'a?', '?7'...
             try:
                 col, row = int(ord(coord[0])) - 97, int(coord[1:]) - 1
-            except ValueError as err:
+            except ValueError:
                 print("Bad input. Coordinate must be of the form a10 or J1")
             else:
                 not_in_shots_dict = enemy_grid.attack_not_in_shots_dict(coord, col, row, self.is_computer)
@@ -60,6 +60,10 @@ class Player:
         return coord
 
     def get_and_validate_player_input(self) -> str:
+        """
+        Description:
+            Checks user input is within grid. Assumes the grid has equal cols and rows
+        """
         while True:
             coord = input("Choose a coordinate to fire on: ").lower()
             if 1 < len(coord) <= len(str(self.grid.cols)) + 1:
@@ -91,11 +95,11 @@ class Player:
     def is_game_over(self, enemy_grid) -> None:
         if enemy_grid.all_ships_sunk():
             print(f"{self.name} wins!")
-            exit()
+            exit(0)
 
     def print_grid(self) -> None:
         # Print offset, and col headers, considering num cols could change
-        print(' ' * (len(str(self.grid.cols)) + 1), end="")
+        print(' ' * (len(str(self.grid.rows)) + 1), end="")
         print(*[chr(c+97).upper() for c in range(self.grid.cols)], end="")
 
         for r in range(self.grid.rows):

@@ -1,12 +1,12 @@
 from player import Player
-
-def play_battleship(player_1, player_2, datafile) -> None:
+import json
+def play_battleship(player_1, player_2, game_data) -> None:
     """
     Description:
         Builds each player's grid and ships. Both players attack each other until a player has no ships left
     """
-    player_1.build_grid_and_place_ships(datafile)
-    player_2.build_grid_and_place_ships(datafile)
+    player_1.build_grid_and_place_ships(game_data)
+    player_2.build_grid_and_place_ships(game_data)
 
     while True:
         print(f"{player_2.get_name()}")
@@ -31,23 +31,55 @@ How to play:
 To make the game more interesting:
     1. Add or remove ships in data.json
     2. Change rows and cols in data.json to increase or decrease the grid size
-    3. If you would like to automate the entire game, pass 'is_computer=True' to both player objects
+    3. If you would like to automate the entire game, pass 'is_computer=True' to both player objects in play_battelship.py
 """)
 
+def validate_data_file(data_file) -> str:
+    """
+    Description:
+        1. Reads the data_file
+        2. Checks rows * cols < sum_ship_health
+        3. Checks rows and cols < max_ship_health
+    """
+    with open(data_file) as file:
 
-def validate_data_file(datafile) -> str:
-    # Check rows and columns >= sum(each ship health)
+        dimensions = json.loads(file.read())[0]
+        rows = dimensions["rows"]
+        cols = dimensions["cols"]
 
-    return datafile
+        # Reset the file.read() cursor
+        file.seek(0)
 
+        ships = json.loads(file.read())[1:]
 
+        # get max_ship_health and sum_ship_health
+        max_ship_health = 0
+        sum_ship_health = 0
+        for ship in ships:
+            sum_ship_health += ship["health"]
+            if ship["health"] > max_ship_health:
+                max_ship_name = ship["name"]
+                max_ship_health = ship["health"]
+
+        # Check rows * cols < sum(each ship["health"])
+        if rows * cols < sum_ship_health:
+            print("Grid dimensions not large enough to place all ships. Please check 'data.json'. Exiting.")
+            exit(1)
+
+        # Check rows and cols < max ship["health"]
+        if rows < max_ship_health and cols < max_ship_health:
+            print(f"Grid dimension not large enough for {max_ship_name}. Please check 'data.json'. Exiting.")
+            exit(1)
+
+    return data_file
 
 if __name__ == "__main__":
     """
     Description:
         1. Prints battleship info and rules
         2. Instantiates two player objects. If is_computer=True, that player will act as a computer
-        3. Plays battleship between the two players with ships in data.json
+        3. Validates the data in data.json
+        4. Plays battleship between the two players with ships in data.json
     """
     print_battleship_info()
 
