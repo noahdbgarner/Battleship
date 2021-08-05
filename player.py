@@ -18,9 +18,7 @@ class Player:
     def get_name(self) -> str:
         return self.name
 
-    # Build grid, Build ships, and Place ships
     def build_grid_and_place_ships(self, datafile) -> None:
-
         dimensions = self.read_dimensions(datafile)
         self.grid = Grid(rows=dimensions["rows"], cols=dimensions["cols"])
 
@@ -29,9 +27,7 @@ class Player:
 
         self.grid.randomly_set_ship_locations()
 
-    # Choose a coordinate to fire on, check the coordinate, and added to the shot_dict
     def attack(self, enemy_grid: Grid) -> None:
-
         coord, col, row = self.check_and_validate_attack_coord(enemy_grid)
         print(f"{self.name} attacked {coord}!")
 
@@ -43,8 +39,7 @@ class Player:
     def check_and_validate_attack_coord(self, enemy_grid) -> tuple:
         while True:
             coord = self.get_attack_coord(enemy_grid)
-
-            # Try-else since control flows off of the try
+            # Handles bad input of the form '7b', '//', '%m', 'a?', '?7'...
             try:
                 col, row = int(ord(coord[0])) - 97, int(coord[1:]) - 1
             except ValueError as err:
@@ -59,7 +54,6 @@ class Player:
         return coord, col, row
 
     def get_attack_coord(self, enemy_grid) -> str:
-        # Computer defaults to random char from a to enemy_grid.cols inclusive, and 1 tp enemy_grid.rows
         coord = chr(random.randrange(97, 97 + enemy_grid.cols)) + str(random.randint(1, enemy_grid.rows))
         if not self.is_computer:
             coord = self.get_and_validate_player_input()
@@ -74,6 +68,11 @@ class Player:
         return coord
 
     def damage_ship_and_update_location_data(self, coord, col, row, enemy_grid) -> str:
+        """
+        Description:
+            Sets default location_data to a miss. If the (col, row) is a ship location,
+            mark it has a hit, and decrement ship health. Then, check if the game is over
+        """
         location_data = "M"
         if (col, row) in enemy_grid.ship_locations:
             location_data = "H"
@@ -92,11 +91,9 @@ class Player:
     def is_game_over(self, enemy_grid) -> None:
         if enemy_grid.all_ships_sunk():
             print(f"{self.name} wins!")
-            exit(1)
+            exit()
 
-    # Print a grid. If coord is in the s, print location_data, otherwise print ~
     def print_grid(self) -> None:
-
         # Print offset, and col headers, considering num cols could change
         print(' ' * (len(str(self.grid.cols)) + 1), end="")
         print(*[chr(c+97).upper() for c in range(self.grid.cols)], end="")
@@ -110,7 +107,7 @@ class Player:
                 coord = str(c)+str(r)
                 location_info = self.grid.shots_dict.get(coord, "~")
 
-                # If printing player grid, we should print first letter of ship if (c, r) not hit yet
+                # If not computer grid, we should print first letter of ship if (c, r) not hit yet
                 if coord not in self.grid.shots_dict and (c, r) in self.grid.ship_locations and not self.is_computer:
                     for ship in self.grid.grid_ships:
                         if (c, r) in ship.get_coords():
