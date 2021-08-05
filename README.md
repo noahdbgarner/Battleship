@@ -30,7 +30,6 @@ both player objects in **play_battleship.py**, and see what happens.
 - The driver prints battleship instructions, creates two players, and plays battleship
 - Both players create their grids and place their ships on the grid
 - Players print their grids and take turns attacking each other until a player has no ships left
-- The computer will keep attacking until it randomly chooses a coordinate that has not been attacked
 
 ## 3. Setup
 
@@ -39,13 +38,17 @@ both player objects in **play_battleship.py**, and see what happens.
 - In terminal, run `python3 play_battleship.py`
 
 ## 4. Approach
-1. I tried solving the problem using a two-dimensional array which I would iterate over to place ships on the board. 
-   After drawing out this solution, I found that it would be more efficient in space and time to add ship locations to a list, and shots fired to a dictionary.
-   This reduced the program complexity, because I would not need any two-dimensional array logic. This also reduced the time complexity of searching for shots and ships to O(1).
-   
 
-2. I started the project with separate classes for the computer and the player. Early into development, however, I realized these classes could be merged into one class.
-   I then added an is_computer field to this new class which changes the behavior of certain methods. For example, the attack function will generate a random coordinate if 'is_computer=True'
+### 4.1 Two-dimensional array -> list + dictionary
+- I tried solving the problem using a two-dimensional array which I would iterate over to place ships on a grid. 
+  After drawing out this solution, I found that it would be more efficient in space and time to add ship locations to a list, and shots fired to a dictionary.
+  This reduced the program complexity, because I would not need any two-dimensional array logic. This also reduced the time complexity of searching for shots and ships to O(1).
+   
+### 4.2 Computer + User -> Player Class
+- I started the project with separate classes for the computer and the user. Early into development, however, I realized these classes could be merged into one class. 
+  I then added an is_computer field to this new Player class which changes the behavior of certain methods. For example, the attack function will generate a random coordinate if 'is_computer=True'
 
 ## 5. Future Improvements
 - The computer's coordinate choice could be intelligent. One way to do this would be to add a function that checks coordinates within a close area of a damaged ship.
+- The handling and printing of extreme col and row combinations such as 100x1 and 50x50 could be improved
+- The Game can support more than two players. However, the Player class could be slightly refactored to hide all Player's ships. This would enable a hot swap game mode.
