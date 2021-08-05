@@ -1,6 +1,6 @@
 class Ship:
     """
-    Representation of the Ship class
+    Representation of the Ship class. A Ship has a name, and health
     """
     def __init__(self,
                  name="",

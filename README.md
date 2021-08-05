@@ -2,27 +2,28 @@
 
 ## 1. Introduction
 
-### Description
+### 1.1 Description
 This program plays the classic game Battleship. It was built to be scalable with respect to grid dimensions and ships.
-Feel free to add/remove ships or change cols and rows in data.json
+Feel free to add/remove ships or change cols/rows in data.json. Additionally, please try passing 'is_computer=True' to
+both player objects, and see what happens.
 
-### Technologies
+### 1.2 Technologies
 
-* Python version > 3.6 
+- Python version > 3.6 
    - This is required because I make use of annotating variables and functions with type hints
 
 ## 2. Design
 
 ### 2.1 Files
-1. **data.json**
+- **data.json**
    - contains grid dimension and ship data
-2. **grid.py**
+- **grid.py**
    - contains the Grid class
-3. **play_battleship.py**
+- **play_battleship.py**
    - contains the driver program
-4. **player.py**
+- **player.py**
    - contains the Player class
-5. **ship.py**
+- **ship.py**
     - contains the Ship class
 
 ### 2.2 Object Relations
@@ -40,4 +41,4 @@ Feel free to add/remove ships or change cols and rows in data.json
 - After drawing out this solution, I found that it would be more efficient to track ship locations with a list, and shots fired with a dictionary
 
 ## 5. Future Improvements
-- The computer's coordinate choice could be made more intelligent. One way to do this would be to add a function that checks coordinates within a close area of a damaged ship
+- The computer's coordinate choice could be intelligent. One way to do this would be to add a function that checks coordinates within a close area of a damaged ship
