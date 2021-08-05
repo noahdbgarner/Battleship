@@ -15,25 +15,27 @@ class Player:
         self.grid: Grid = grid
         self.is_computer: bool = is_computer
 
-    def build_grid_and_place_ships(self, datafile) -> None:
-        dimensions = self.read_dimensions(datafile)
+    def build_grid_and_place_ships(self, game_data) -> None:
+        """
+        Description:
+            Validates the game_data, builds the grid, builds the ships, and places the ships
+        """
+        dimensions, ships = self.validate_and_get_dimensions_and_ships(game_data)
+
         self.grid = Grid(rows=dimensions["rows"], cols=dimensions["cols"])
-
-        ship_data = self.read_ships(datafile)
-        self.grid.build_ships(ship_data)
-
+        self.grid.build_ships(ships)
         self.grid.randomly_set_ship_locations()
 
     def attack(self, enemy_grid: Grid) -> None:
-        coord, col, row = self.check_and_validate_attack_coord(enemy_grid)
+        coord, col, row = self.validate_and_get_attack_coord(enemy_grid)
         print(f"{self.name} attacked {coord}!")
 
-        location_data = self.damage_ship_and_update_location_data(coord, col, row, enemy_grid)
+        location_data = self.damage_ship_and_get_location_data(coord, col, row, enemy_grid)
 
-        # Add the location data to the shots dictionary
+        # Update the location data to the shots dictionary
         enemy_grid.shots_dict[str(col) + str(row)] = location_data
 
-    def check_and_validate_attack_coord(self, enemy_grid) -> tuple:
+    def validate_and_get_attack_coord(self, enemy_grid) -> tuple:
         while True:
             coord = self.get_attack_coord(enemy_grid)
             # Handles bad input of the form '7b', '//', '%m', 'a?', '?7'...
@@ -68,7 +70,7 @@ class Player:
             print("Bad length. Coordinate must be of the form a10 or J1")
         return coord
 
-    def damage_ship_and_update_location_data(self, coord, col, row, enemy_grid) -> str:
+    def damage_ship_and_get_location_data(self, coord, col, row, enemy_grid) -> str:
         """
         Description:
             Sets default location_data to a miss. If the (col, row) is a ship location,
@@ -95,8 +97,8 @@ class Player:
             exit(0)
 
     def print_grid(self) -> None:
-        # Print offset, and col headers, considering num cols could change
         print(self.name)
+        # Print offset, and col headers, considering num rows could change
         print(' ' * (len(str(self.grid.rows)) + 1), end="")
         print(*[chr(c+97).upper() for c in range(self.grid.cols)], end="")
 
@@ -119,11 +121,42 @@ class Player:
         print("\n")
 
     @staticmethod
-    def read_dimensions(data_file) -> list:
-        with open(data_file) as file:
-            return json.loads(file.read())[0]
+    def validate_and_get_dimensions_and_ships(data) -> tuple:
+        """
+        Description:
+            1. Reads the data_file
+            2. Checks rows * cols < sum_ship_health
+            3. Checks rows and cols < max_ship_health
+            4. Returns the dimensions and ships data
+        """
+        with open(data) as file:
 
-    @staticmethod
-    def read_ships(data_file) -> list:
-        with open(data_file) as file:
-            return json.loads(file.read())[1:]
+            dimensions = json.loads(file.read())[0]
+            rows = dimensions["rows"]
+            cols = dimensions["cols"]
+
+            # Reset the file.read() cursor
+            file.seek(0)
+
+            ships = json.loads(file.read())[1:]
+
+            # get max_ship_health and sum_ship_health
+            max_ship_health = 0
+            sum_ship_health = 0
+            for ship in ships:
+                sum_ship_health += ship["health"]
+                if ship["health"] > max_ship_health:
+                    max_ship_name = ship["name"]
+                    max_ship_health = ship["health"]
+
+            # Check rows * cols < sum(each ship["health"])
+            if rows * cols < sum_ship_health:
+                print("Grid dimensions not large enough to place all ships. Please check 'data.json'. Exiting.")
+                exit(1)
+
+            # Check rows and cols < max ship["health"]
+            if rows < max_ship_health and cols < max_ship_health:
+                print(f"Grid dimensions not large enough for {max_ship_name}. Please check 'data.json'. Exiting.")
+                exit(1)
+
+        return dimensions, ships
