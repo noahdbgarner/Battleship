@@ -2,11 +2,8 @@ from player import Player
 
 def play_battleship(player_1, player_2, datafile) -> None:
     """
-    Description: Builds each player's grid and ships. Both players attack each other until a player has no ships left
-    :param player_1: a Player object (a computer or a program user)
-    :param player_2: a Player object (a computer or a program user)
-    :param datafile: json file which contains grid dimensions and ship data
-    :return: None
+    Description:
+        Builds each player's grid and ships. Both players attack each other until a player has no ships left
     """
     player_1.build_grid_and_place_ships(datafile)
     player_2.build_grid_and_place_ships(datafile)
@@ -37,6 +34,14 @@ To make the game more interesting:
     3. If you would like to automate the entire game, pass 'is_computer=True' to both player objects
 """)
 
+
+def validate_data_file(datafile) -> str:
+    # Check rows and columns >= sum(each ship health)
+
+    return datafile
+
+
+
 if __name__ == "__main__":
     """
     Description:
@@ -48,6 +53,6 @@ if __name__ == "__main__":
 
     player = Player(name=input(f"Enter your name when you are ready to play: "), is_computer=False)
     computer = Player(name="computer", is_computer=True)
-    data = "data.json"
+    data = validate_data_file("data.json")
 
     play_battleship(player, computer, data)

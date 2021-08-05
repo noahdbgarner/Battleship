@@ -3,7 +3,7 @@ import random
 
 class Grid:
     """
-    Representation of the Grid class. A Grid has a list of ships, a list of ship locations, and a dictionary of shots
+    Representation of the Grid class. A Grid has rows, cols, a list of ships, a list of ship locations, and a dictionary of shots
     """
     def __init__(self,
                  rows="",
@@ -34,8 +34,8 @@ class Grid:
             col, row = random.randrange(self.cols), random.randrange(self.rows)
             vertical = random.choice([True, False])
 
-            # Build ship_coords using the health of the ship
-            ship_coords: list = []
+            # Build ship_coords using ship health
+            ship_coords = []
             for i in range(ship.health):
                 ship_coords.append((col, row))
                 if vertical:
@@ -71,6 +71,7 @@ class Grid:
         return False
 
     def all_ships_sunk(self) -> bool:
+        # If a ship has health > 0, not all ships are sunk
         for ship in self.grid_ships:
             if ship.health > 0:
                 return False
